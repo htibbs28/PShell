@@ -1,0 +1,8 @@
+powershell.exe is a wrapper for System.Management.Automation.dll
+Cmdlet Structure: Vern-Noun (case-insensitive)
+Cmdlets: Native to PowerShell.
+Functions: Use Verb-Noun structure
+Workflows
+Ext. Commands
+Aliases
+Path Variables
