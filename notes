@@ -6,3 +6,37 @@ Workflows
 Ext. Commands
 Aliases
 Path Variables
+
+
+Exercise Notes:
+  Find Cmdlets:
+    1. Update-Help
+    2. Get-Command *process*
+       Get-Command -noun process
+       Get-Help *process*
+    3. Get-Service
+    4. Get-Help -Verb Write  
+    5. Get-Command -Noun variable
+    6. Get-Command
+    7. Read-Host 
+    
+  Running Cmdlets:
+    1. Get-Process
+    2. Get-Process -Name s*
+    3. "gal,"dir","echo","?","%","ft" | ForEach-Object {Get-Alias $_}
+    4. Get-Command *firewall*
+    5. New-Alias gh Get-Help
+  
+  Variables:
+    $var1 = Get-Random -Minimum 25 -Maximum 50
+    $var2 = Get-Random -Minimum 1 -Maximum 10
+
+    $sum = $var1 + $var2
+    $sub = $var1 - $var2
+    $prod = $var1 * $var2
+    $quo = $var1 / $var2
+
+    "{0} + {1} = {2}" -f $var1,$var2,$sum
+    "{0} - {1} = {2}" -f $var1,$var2,$sub
+    "{0} * {1} = {2}" -f $var1,$var2,$prod
+    "{0} / {1} = {2}" -f $var1,$var2,$quo
