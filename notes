@@ -40,7 +40,28 @@ Exercise Notes:
     "{0} - {1} = {2}" -f $var1,$var2,$sub
     "{0} * {1} = {2}" -f $var1,$var2,$prod
     "{0} / {1} = {2}" -f $var1,$var2,$quo
+    
+  The Pipeline:
+    1. Get-Process | Where-Object{$_.StartTime} | Measure-Object -Property StartTime -Minimum -Maximum | Select-Object -Property Minimum,Maximum
+    2. Get-Date | select DayOfWeek,(Get-Date).DayOfWeek
+    3. Get-Command *Hotfix*, Get-Hotfix
+    4. Get-Hotfix | Sort-Object -Property InstalledOn | Select-Object HotFixID,InstalledOn,InstalledBy
+    5. Get-Hotfix | Sort-Object -Property Description | Select-Object Description,HotFixID,InstalledOn
 
+  Custom Object:
+    $WorkStation = [PSCustomObject]@{
+      "PSComputerName" = "WIN-OPS"
+      "OS" = "Microsoft Windows 10 Pro"
+      "OSVersion" = "10.0.1945"
+      "Manufacturer" = "SeaBIOS"
+      "Disk" = "{\\WIN-OPS\root\cimv2:Win32_LogicalDisk.DeviceID='C:'}"
+    }
+    $WorkStation
+    
+  Comparison and Condition:
+  
+  Looping and Iteration:
+    
 $myCar = New-Object object
 Add-Member -MemberType NoteProperty -Name Color -Value Black -InputObject $myCar
 Add-Member -me NoteProperty -in $myCar -na Make -Value Toyota
@@ -56,3 +77,119 @@ $soldier = [PSCustomObject]@{
     "Position" = "Network Specialist"
 }
 $soldier
+
+if (condition) {
+  #code to execute if applicable
+#}
+
+$x = 11
+if ($x -gt 10) {"$x is larger than 10"}
+
+$x = 5
+if($x -eq 5) {
+  Write-Host "Condition is true - x is equal to 5"
+}
+
+if ("ABC" -ieq "Abc") {
+  Write-Host "Example 1 - Condition Satisfied" -Foreground Green
+}
+else {
+  Write-Host "Example 1 - Condition NOT Satisfied" -ForegroundColor Red
+}
+
+$x = 2
+if ($x -eq 5) {
+  Write-Host "Bob"
+}
+elseif ($x -eq 4) {
+  Write-Host "Sue"
+}
+elseif ($x -eq 2) {
+  Write-Host "Tom"
+}
+elseif ($x -eq 1) {
+  Write-Host "Mary"
+}
+else {
+  Write-Host "Who am I?"
+}
+
+$num = (Get-Random -Minimum 0 -Maximum 10)
+if($num -lt 5) {
+  "$num is less than 5"
+}
+elseif($num -eq 5) {
+  "$num is exactly 5"
+}
+else {
+  "$num is greater than 5"
+}
+
+Switch(10)
+{
+  (1 + 9) {
+    "Correct"
+  }
+  (1 + 10) {
+    "Wrong"
+  }
+  (11 - 1) {
+    "Correctly Subtracted"
+  }
+  (1 - 11) {
+    "Subtracted Incorrectly"
+  }
+}
+
+$val = "Meg"
+Switch($val) {
+  Peter {"That's the father"}
+  Lois {"That's the mother"}
+  Stewie {"That's the youngest"}
+  Chris {"That's the oldest"}
+  default {"Nobody cares about you $val"}
+}
+
+$nums = 1,2,3,4,5
+$nums | ForEach-Object{$_ * 2}
+
+$sum = 0
+$nums | ForEach-Object{$sum += $_}
+$sum
+
+$list = 'a', 'b', 'c', 'd'
+$list | ForEach-Object{$_.ToUpper()}
+
+Get-Process | select -First 10 | ForEach-Object{$_.name} | ForEach-Object{$_.ToUpper()}
+Get-ChildItem | ForEach-Object{$_.Length / 1kb}
+
+1..10 | ForEach-Object{$_ * 10}
+
+foreach(item in gci c:\users\student\Desktop -Recurse){$item.name}
+Get-ChildItem | ForEach-Object{$_.name}
+
+foreach($nums in 1..5){$nums * 2}
+$nums | ForEach-Object{$_ * 2)
+
+$num = 0
+while ($num -lt 3) {
+  $num
+  $num++
+}
+
+$var = ""
+while($var -ne "Marines") {
+  $var = Read-Host "Which branch of the military is the best?"
+}
+
+$num = 0
+do {
+  $num
+  $num ++
+}while($num -lt 3)
+
+Set-Content -path .\example.txt -value "A string"
+Get-Content .\example.txt
+Add-Content -path .\example.txt -value "another string"
+"a third string" > .\example.txt (To Overwrite)
+"a different string" >> .\example.txt (To Append)
