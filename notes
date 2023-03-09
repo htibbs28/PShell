@@ -40,3 +40,19 @@ Exercise Notes:
     "{0} - {1} = {2}" -f $var1,$var2,$sub
     "{0} * {1} = {2}" -f $var1,$var2,$prod
     "{0} / {1} = {2}" -f $var1,$var2,$quo
+
+$myCar = New-Object object
+Add-Member -MemberType NoteProperty -Name Color -Value Black -InputObject $myCar
+Add-Member -me NoteProperty -in $myCar -na Make -Value Toyota
+Add-Member -InputObject $myCar NoteProperty Model "Corolla"
+Add-Member -MemberType ScriptMethod -InputObject $myCar -name Drive -Value { "out on road" }
+$myCar | Add-Member ScriptMethod Park { "find the spot" }
+
+$soldier = [PSCustomObject]@{
+    "FirstName" = "Mike"
+    "LastName" = "Oxnard"
+    "MilitaryRank" = "SPC"
+    "MOS" = "17C"
+    "Position" = "Network Specialist"
+}
+$soldier
