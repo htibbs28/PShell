@@ -19,7 +19,7 @@ Exercise Notes:
     5. Get-Command -Noun variable
     6. Get-Command
     7. Read-Host 
-    
+     
   Running Cmdlets:
     1. Get-Process
     2. Get-Process -Name s*
@@ -59,9 +59,124 @@ Exercise Notes:
     $WorkStation
     
   Comparison and Condition:
-  
+    $pattern = '[A-Za-z]{2}\d{2,5}'
+    switch($pattern) {
+      { $line1 -match $_ } {
+        $line1 -match $pattern | out-null
+        $model = $matches[0]
+        "Yes, model number $model is on line one"
+      }
+      { $line2 -match $_ } {
+        $line2 -match $pattern | out-null
+        $model = $matches[0]
+        "Yes, model number $model is on line two"
+      }
+      { $line1 -notmatch $_ } {
+        "There is no model number on line one"
+      }
+      { $line2 -notmatch $_ } {
+        "There is no model number on line two/"
+      }
+    }
   Looping and Iteration:
+    Part1:
+      $procs="notepad","msedge","mspaint"
+      $procs | ForEach-Object {Start-Process $_}
+      Get-Process
+      $procs | ForEach-Object {Stop-Process -Name $_}
     
+    Part2:
+      $procs="notepad","msedge","mspaint"
+      $procs | ForEach-Object {Start-Process $_}
+      $file="$pwd\procs.txt"
+      foreach($proc in $procs) {
+        Get-Process | Where-Object{$_.Name -like $proc
+        ForEach-Object{Add-Content $file $_.Id}
+      }
+      Get-Content $file | ForEach-Object {Stop-Process -Id $_}
+      
+    Part3:
+      $procs="notepad","msedge","mspaint"
+      $procs | ForEach-Object {Start-Process $_}
+      foreach($proc in $procs){
+        Get-Process | Where-Object{$_.Name -like $proc}
+        Format-Table -Property id,name,starttime,totalprocessortime,virtualmemorysize,workingset64
+      }
+      $procs | ForEach-Object{Stop-Process -Name $_}
+
+  Reverse Arrays:
+    $randomarr= ((Get-Random -Minimum "-10" -Maximum "0")..(Get-Random -Minimum "1" -Maximum "20"))
+    [array]::Reverse($randomarr)
+  
+  Arrays and Hash Tables:
+    $employee1=@{}
+    $employee1.First="Mary"
+    $employee1.Last="Hopper"
+    $employee1.ID="001"
+    $employee1.Job= "Software Lead"
+    $employee1.Username="mhopper001"
+    $employee1.Status="Management"
+
+    $employee2=@{}
+    $employee1.First="John"
+    $employee1.Last="Williams"
+    $employee1.ID="002"
+    $employee1.Job= "Web Developer"
+    $employee1.Username="jwilliams002"
+    $employee2.Status="Intermediate"
+
+    $employee3=@{}
+    $employee3.First="Alex"
+    $employee3.Last="Moran"
+    $employee3.ID="003"
+    $employee3.Job= "Software Developer"
+    $employee3.Username="amoran003"
+    $employee3.Status="Entry Level"
+    
+  Create Functions:
+    function Squared([Int]$num){
+      return $num*$num  
+    }
+    Squared
+    
+    function Multi($val1,$val2,$val3){
+      return $val1*$val2*$val3   
+    }
+    Multi
+    
+    Function OrdDate{
+      $date=(get-date).DayOfYear
+      $year=(get-date).Year
+      Write-Host $year"-"$date
+    }
+    OrdDate
+
+  Regex:
+    function Get-NetInfo{
+      $pattern = '.*?((\d{1,3}\.){3}\d{1,3})'
+      $netinfo = ipconfig
+      $ip = $netinfo -match "IPv4$pattern" | %{if($_ -match $pattern){$Matches[1]}}
+      $subnet = $netinfo -match "Subnet$pattern" | %{if($_ -match $pattern){$Matches[1]}}
+      $GW = $netinfo -match "Gateway$pattern" | %{if($_ -match $pattern){$Matches[1]}}
+      "IP: {0}`nSubnet: {1}`nGateway: {2}" -f $ip,$subnet,$GW
+    }
+    Get-NetInfo
+    
+    function Get-UrlInfo{
+      $ips = @()
+      $file = gc .\dns.txt
+      $regex = '(www\.[a-zA-Z0-9\-\.]+\.(com|org|net))'
+      foreach($line in $file){
+        if($line -match $file){
+            $Matches[1]
+            $ips += $matches[1]
+        }
+      }
+      $ips.count
+      $ips | sort | group
+    }
+    Get-UrlInfo
+
 $myCar = New-Object object
 Add-Member -MemberType NoteProperty -Name Color -Value Black -InputObject $myCar
 Add-Member -me NoteProperty -in $myCar -na Make -Value Toyota
@@ -165,7 +280,7 @@ Get-ChildItem | ForEach-Object{$_.Length / 1kb}
 
 1..10 | ForEach-Object{$_ * 10}
 
-foreach(item in gci c:\users\student\Desktop -Recurse){$item.name}
+foreach(item in gci c:\users\student\Desktop -Recurse 2>$null){$item.name}
 Get-ChildItem | ForEach-Object{$_.name}
 
 foreach($nums in 1..5){$nums * 2}
@@ -193,3 +308,120 @@ Get-Content .\example.txt
 Add-Content -path .\example.txt -value "another string"
 "a third string" > .\example.txt (To Overwrite)
 "a different string" >> .\example.txt (To Append)
+
+$x=Get-Process
+$x.GetType()
+$x -is [array]
+$x[0]
+$x[0].GetType()
+$array=1..20
+$array2="World","hello",5,10,(Get-Date)
+$array3=@()
+$arr=1..10
+$arr[7..$arr.Length]
+
+$jagarr="joe,"jim","jan",(1,('apple','pear'),3),"jay"
+$jagarr[3]=1 apple pear 3
+$jagarr[3][0]=1
+$jagarr[3][1][1]=pear
+
+$a=1,2,3
+$a+=@(4,5,6)
+
+$mylist=@{First="john; Last="Doe"; Middle="Bon";Age=35}
+$mylist["Last"]
+
+$list=@{element1 =5, array1=1..5; array2=6,7,8}
+$list.Keys
+
+Enable-PSRemoting
+Set-NetFirewallProfile -Name Public -Enabled False
+Get-Item WSMan:\localhost\client\TrustedHosts
+Set-Item WSMan:\localhost\client\TrustedHosts
+Enter-PSSession -ComputerName <ip of computer> -Credential <username>
+
+'GetHostByName' -csplit '(?<=[a-z])(?=[A-Z)'
+'112233445566778899' -split '(?<=\G.{2})(?=.)'
+'DEADBEEFCAFE' -split '(?<=\G[0-9a-f]{2})(?=.)' -join ':'
+
+"I am `"Batman`" (` is an escape character)
+
+"Here is another`nline of text" Output:
+Here is another
+line of text
+
+"{0:n3}" -f 123.45678
+123.457
+
+^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$
+"8.8.8.8" -as [ipaddress]
+
+function <name>{
+  <code>
+}
+
+function test-me{
+  Write-Host "Hello World!"
+}
+test-me
+
+function retest($value){
+  if ($value){
+    Write-Host -ForegroundColor Green "True"
+  }
+  else{
+    Write-Host -ForegroundColor Red "False"
+  }
+}
+retest
+retest 1
+
+function paramfunc{
+  param(
+    $param1='Nothing', $param2='why not?'
+  )
+  Write-Host "You just entered $param1 and $param2"
+}
+paramfunc
+paramfunc Word1 Word2
+
+function switchparam{
+  param(
+    [Switch]
+    $DoSwitch
+  )
+  if ($DoSwitch){
+    "I have been switched!"
+  }
+  else{
+    "I have not been switched"
+  }  
+}
+
+function permparam{
+  param(
+    [Parameter(Mandatory=$true)]
+    $permpram
+  )
+  "Your name is $permpram"
+}
+permparam
+permparam namely
+
+function Dollars{
+  param(
+    [Parameter(Mandatory=$true, HelpMessage='Enter the number of Euros. '
+    [Double]$Euro
+  )
+  $Dollar = $Euro * 1.06
+  return "{0:n2}" -f $Dollar
+}
+Dollars
+
+
+
+
+
+
+
+
